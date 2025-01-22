@@ -1,0 +1,38 @@
+@model GameStore.Models.ReviewCreateVM
+
+@{
+    ViewData["Title"] = "Review";
+}
+
+<h1>@Model.GameTitle</h1>
+<h4>Leave a review</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                Would you recommend this game?
+                <input asp-for="IsPositive" type="checkbox" />
+            </div>
+            <div class="form-group">
+                Why?
+                <br />
+                <textarea asp-for="Description" class="form-control" rows="3"></textarea>
+                <span asp-validation-for="Description" class="text-danger"></span>
+            </div>
+            <br />
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index" asp-route-gameid=@ViewContext.RouteData.Values["gameid"]>Cancel</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

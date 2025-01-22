@@ -1,0 +1,105 @@
+@model GameListVM
+
+@{
+    ViewData["Title"] = "Games";
+}
+
+<h1>Games</h1>
+
+<p>
+    <a asp-action="Create">Publish a new game</a>
+</p>
+
+<form asp-action="Index" method="get" style="padding-top: 20px;">
+    <p>
+        <input asp-for="Search" name="search" />
+        <input type="submit" value="Search" />
+    </p>
+    <p>
+        Sort by:
+        <select>
+            
+        </select>
+    </p>
+</form>
+
+<table>
+    <tbody>
+@foreach (var item in Model.Games!.Items) {
+        <tr>
+            <td>
+                <a asp-action="Details" asp-route-id=@item.Id class="game-btn">
+                    <img src="test">
+                </a>
+            </td>
+            <td>
+                <a asp-action="Details" asp-route-id=@item.Id class="game-btn">
+                    @Html.DisplayFor(m => item.Title)
+                </a>
+            </td>
+            <td>
+                <a asp-action="Details" asp-route-id=@item.Id class="game-btn">
+                    @Html.DisplayFor(m => item.ReleaseDate)
+                </a>
+            </td>
+            <td>
+                <a asp-action="Details" asp-route-id=@item.Id class="game-btn">
+                    @if (item.Price > 0) {
+                        <span>$@Html.DisplayFor(m => item.Price)</span>
+                    } else {
+                        <span>Free</span>
+                    }
+                </a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
+
+@{
+    var prev = Model.Games.CanPrev ? "" : "disabled";
+    var next = Model.Games.CanNext ? "" : "disabled";
+}
+@if (Model.Games.TotalPages > 0) {
+    <p>
+        <form asp-action="Index" method="get">
+            <a asp-action="Index" asp-route-search=@Model.Search asp-route-page=@(Model.Games.PageNum - 1) class="btn btn-primary @prev">&lt;</a>
+
+            <input name="search" value=@Model.Search type="hidden"></input>
+            <input asp-for="Page" name="page" type="text" style="width: 35px;"></input>
+            of @Model.Games.TotalPages
+            
+            <a asp-action="Index" asp-route-search=@Model.Search asp-route-page=@(Model.Games.PageNum + 1) class="btn btn-primary @next">></a>
+        </form>
+    </p>
+} else {
+    <p>0 Results</p>
+}
+
+<style>
+    table {
+        width: 100%;
+        border-collapse: separate;
+        border-spacing: 0 10px;
+    }
+    tr {
+        background-color: #eeeeee;
+    }
+    tr:hover {
+        background-color: #cccccc;
+    }
+    td {
+        padding: 0;
+        word-break: break-word;
+    }
+    .game-btn {
+        display: block;
+        text-align: left;
+        padding: 0.875rem 0.75rem;
+        text-decoration: none;
+        color: inherit;
+    }
+    .game-btn:hover {
+        color: inherit;
+    }
+</style>
