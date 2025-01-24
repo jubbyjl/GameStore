@@ -116,6 +116,8 @@ namespace GameStore.Controllers
             if (ModelState.IsValid) {
                 context.Add(review);
                 await context.SaveChangesAsync();
+
+                TempData["Success"] = "Successfully created.";
                 return RedirectToAction(nameof(Index), new { gameid = gameId });
             }
             

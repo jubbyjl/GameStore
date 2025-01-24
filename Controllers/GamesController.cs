@@ -78,7 +78,6 @@ namespace GameStore.Controllers
         public IActionResult Create()
         {
             return View();
-            // TODO: description should allow newlines
         }
 
         // POST: games/create
@@ -92,6 +91,8 @@ namespace GameStore.Controllers
             {
                 context.Add(game);
                 await context.SaveChangesAsync();
+
+                TempData["Success"] = "Successfully published.";
                 return RedirectToAction(nameof(Index));
             }
             return View(game);
@@ -124,6 +125,7 @@ namespace GameStore.Controllers
                 {
                     context.Update(game);
                     await context.SaveChangesAsync();
+                    TempData["Success"] = "Successfully edited.";
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -162,6 +164,7 @@ namespace GameStore.Controllers
             if (game != null)
             {
                 context.Games.Remove(game);
+                TempData["Success"] = "Successfully deleted.";
                 // TODO: delete related data ie reviews
             }
 
