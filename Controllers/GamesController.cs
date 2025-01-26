@@ -160,12 +160,14 @@ namespace GameStore.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Delete(int id)
         {
-            var game = await context.Games.FindAsync(id);
+            var game = await context.Games
+                .Include(g => g.Reviews)
+                .FirstOrDefaultAsync(g => g.Id == id);
+
             if (game != null)
             {
                 context.Games.Remove(game);
                 TempData["Success"] = "Successfully deleted.";
-                // TODO: delete related data ie reviews
             }
 
             await context.SaveChangesAsync();

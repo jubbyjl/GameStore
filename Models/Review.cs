@@ -9,5 +9,7 @@ public class Review
     public bool IsPositive { get; set; }
     public string? Description { get; set; }
     public DateTime TimeCreated { get; set; }
+
     public int GameId { get; set; }
+    public Game? Game { get; set; }
 }

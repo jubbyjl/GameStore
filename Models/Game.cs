@@ -25,4 +25,6 @@ public class Game
 
     [Required]
     public string? Description { get; set; }
+
+    public List<Review> Reviews { get; } = new List<Review>();
 }
