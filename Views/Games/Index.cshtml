@@ -26,7 +26,7 @@
 <table>
     <tbody>
 @foreach (var item in Model.Games!.Items) {
-        <tr>
+        <tr class="item-dark">
             <td>
                 <a asp-action="Details" asp-route-id=@item.Id class="game-btn">
                     <img src="test">
@@ -80,18 +80,18 @@
     table {
         width: 100%;
         border-collapse: separate;
-        border-spacing: 0 10px;
+        border-spacing: 0 0.35em;
     }
-    tr {
-        background-color: #eeeeee;
-    }
+
     tr:hover {
-        background-color: #cccccc;
+        background-color: #151921;
     }
+
     td {
         padding: 0;
         word-break: break-word;
     }
+
     .game-btn {
         display: block;
         text-align: left;
@@ -99,6 +99,7 @@
         text-decoration: none;
         color: inherit;
     }
+
     .game-btn:hover {
         color: inherit;
     }

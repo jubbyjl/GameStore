@@ -20,3 +20,28 @@ html {
 body {
   margin-bottom: 60px;
 }
+
+/* Complement dark mode background */
+a {
+  color: #5aa2ff;
+}
+
+a:hover {
+  color: #4a98ff;
+}
+
+input, textarea, select, .form-control, .form-control:focus {
+  background-color: #33363b;
+  border: 1px solid #5c5c5c;
+  color: inherit;
+}
+
+dt {
+  font-weight: 300;
+  color: #d1d1d1;
+}
+
+.item-dark {
+  background-color: #1a1d21;
+  color: #eee;
+}
