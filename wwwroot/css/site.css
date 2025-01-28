@@ -36,6 +36,15 @@ input, textarea, select, .form-control, .form-control:focus {
   color: inherit;
 }
 
+.form-control:disabled {
+  background-color: #282b31;
+}
+
+.input-group-text {
+  background-color: #282b31;
+  border: 1px solid #5c5c5c;
+}
+
 dt {
   font-weight: 300;
   color: #d1d1d1;
