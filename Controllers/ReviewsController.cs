@@ -8,6 +8,8 @@ using Microsoft.EntityFrameworkCore;
 using GameStore.Data;
 using GameStore.Models;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 
 namespace GameStore.Controllers
 {
@@ -15,10 +17,12 @@ namespace GameStore.Controllers
     public class ReviewsController : Controller
     {
         private readonly GameStoreContext context;
+        private readonly UserManager<StoreUser> userManager;
 
-        public ReviewsController(GameStoreContext context)
+        public ReviewsController(GameStoreContext context, UserManager<StoreUser> userManager)
         {
             this.context = context;
+            this.userManager = userManager;
         }
 
         // GET: games/3/reviews
@@ -84,6 +88,7 @@ namespace GameStore.Controllers
 
         // GET: games/3/reviews/create
         [HttpGet("create")]
+        [Authorize]
         public async Task<IActionResult> Create(int gameId)
         {
             var game = await context.Games.FindAsync(gameId);
@@ -99,6 +104,7 @@ namespace GameStore.Controllers
 
         // POST: games/3/reviews/create
         [HttpPost("create")]
+        [Authorize]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(int gameId, ReviewCreateVM reviewCreateVM)
         {
@@ -110,7 +116,8 @@ namespace GameStore.Controllers
                 IsPositive = reviewCreateVM.IsPositive,
                 Description = reviewCreateVM.Description,
                 GameId = gameId,
-                TimeCreated = DateTime.UtcNow
+                TimeCreated = DateTime.UtcNow,
+                UserId = userManager.GetUserId(User)
             };
 
             if (ModelState.IsValid) {

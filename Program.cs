@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using GameStore.Data;
 using Microsoft.AspNetCore.Identity;
+using GameStore.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -8,7 +9,7 @@ builder.Services.AddDbContext<GameStoreContext>(options =>
     options.UseSqlite(builder.Configuration.GetConnectionString("GameStoreContext") ?? throw new InvalidOperationException("Connection string 'GameStoreContext' not found.")));
 
 builder.Services
-    .AddIdentity<IdentityUser,IdentityRole>(options => options.SignIn.RequireConfirmedAccount = true)
+    .AddIdentity<StoreUser,IdentityRole>(options => options.SignIn.RequireConfirmedAccount = true)
     .AddEntityFrameworkStores<GameStoreContext>()
     .AddDefaultTokenProviders()
     .AddDefaultUI();

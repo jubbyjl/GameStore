@@ -27,4 +27,6 @@ public class Game
     public string? Description { get; set; }
 
     public List<Review> Reviews { get; } = new List<Review>();
+
+    public string? UserId { get; set; }
 }

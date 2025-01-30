@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 
 namespace GameStore.Data
 {
-    public class GameStoreContext : IdentityDbContext
+    public class GameStoreContext : IdentityDbContext<StoreUser>
     {
         public GameStoreContext (DbContextOptions<GameStoreContext> options)
             : base(options)
@@ -18,5 +18,23 @@ namespace GameStore.Data
         public DbSet<Game> Games { get; set; } = default!;
 
         public DbSet<Review> Reviews { get; set; } = default!;
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+
+            modelBuilder.Entity<StoreUser>(b =>
+            {
+                b.HasMany(e => e.Games)
+                    .WithOne()
+                    .HasForeignKey(x => x.UserId)
+                    .IsRequired();
+                
+                b.HasMany(e => e.Reviews)
+                    .WithOne()
+                    .HasForeignKey(x => x.UserId)
+                    .IsRequired();
+            });
+        }
     }
 }

@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using GameStore.Data;
 using GameStore.Models;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 
 namespace GameStore.Controllers
 {
@@ -14,10 +16,12 @@ namespace GameStore.Controllers
     public class GamesController : Controller
     {
         private readonly GameStoreContext context;
+        private readonly UserManager<StoreUser> userManager;
 
-        public GamesController(GameStoreContext context)
+        public GamesController(GameStoreContext context, UserManager<StoreUser> userManager)
         {
             this.context = context;
+            this.userManager = userManager;
         }
 
         // GET: games
@@ -75,6 +79,7 @@ namespace GameStore.Controllers
 
         // GET: games/create
         [HttpGet("create")]
+        [Authorize]
         public IActionResult Create()
         {
             return View();
@@ -84,9 +89,12 @@ namespace GameStore.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost("create")]
+        [Authorize]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Title,Price,ReleaseDate,Developer,Publisher,Description")] Game game)
         {
+            game.UserId = userManager.GetUserId(User);
+
             if (ModelState.IsValid)
             {
                 context.Add(game);
@@ -95,6 +103,7 @@ namespace GameStore.Controllers
                 TempData["Success"] = "Successfully published.";
                 return RedirectToAction(nameof(Index));
             }
+
             return View(game);
         }
 
