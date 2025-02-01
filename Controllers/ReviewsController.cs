@@ -68,7 +68,17 @@ namespace GameStore.Controllers
                 }
             }
 
-            reviews = reviews.OrderByDescending(r => r.TimeCreated);
+            reviews = reviews.OrderByDescending(r => r.TimeCreated)
+                             .Include(r => r.User);
+
+            Review? currentUserReview = null;
+            var userId = userManager.GetUserId(User);
+            if (userId != null)
+            {
+                currentUserReview = await context.Reviews
+                    .FirstOrDefaultAsync(r => r.GameId == game.Id && r.UserId == userId);
+            }
+
             var reviewListVM = new ReviewListVM
             {
                 GameTitle = game.Title,
@@ -82,6 +92,7 @@ namespace GameStore.Controllers
                     "Value",
                     "Text"
                 ),
+                CurrentUserReview = currentUserReview,
             };
             return View(reviewListVM);
         }
@@ -93,6 +104,15 @@ namespace GameStore.Controllers
         {
             var game = await context.Games.FindAsync(gameId);
             if (game == null) return NotFound();
+
+            var userId = userManager.GetUserId(User);
+            var reviewExists = await context.Reviews
+                .AnyAsync(r => r.UserId == userId && r.GameId == gameId);
+
+            if (reviewExists)
+            {
+                return RedirectToAction(nameof(Index), new { gameid = gameId });
+            }
 
             var reviewCreateVM = new ReviewCreateVM
             {
@@ -111,16 +131,26 @@ namespace GameStore.Controllers
             var game = await context.Games.FindAsync(gameId);
             if (game == null) return NotFound();
 
+            var userId = userManager.GetUserId(User);
+            var reviewExists = await context.Reviews
+                .AnyAsync(r => r.UserId == userId && r.GameId == gameId);
+
+            if (reviewExists)
+            {
+                return RedirectToAction(nameof(Index), new { gameid = gameId });
+            }
+
             var review = new Review
             {
                 IsPositive = reviewCreateVM.IsPositive,
                 Description = reviewCreateVM.Description,
                 GameId = gameId,
                 TimeCreated = DateTime.UtcNow,
-                UserId = userManager.GetUserId(User)
+                UserId = userId
             };
 
-            if (ModelState.IsValid) {
+            if (ModelState.IsValid)
+            {
                 context.Add(review);
                 await context.SaveChangesAsync();
 

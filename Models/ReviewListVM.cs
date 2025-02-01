@@ -12,4 +12,5 @@ public class ReviewListVM
     public int Page { get; set; }
     public SelectList? Filters { get; set; }
     public string? Filter { get; set; }
+    public Review? CurrentUserReview { get; set; }
 }

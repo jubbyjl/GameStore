@@ -14,4 +14,5 @@ public class Review
     public Game? Game { get; set; }
 
     public string? UserId { get; set; }
+    public StoreUser? User { get; set; }
 }

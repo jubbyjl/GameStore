@@ -31,7 +31,7 @@ namespace GameStore.Data
                     .IsRequired();
                 
                 b.HasMany(e => e.Reviews)
-                    .WithOne()
+                    .WithOne(e => e.User)
                     .HasForeignKey(x => x.UserId)
                     .IsRequired();
             });

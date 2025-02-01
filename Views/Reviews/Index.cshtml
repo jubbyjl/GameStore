@@ -1,3 +1,8 @@
+@using Microsoft.AspNetCore.Identity
+
+@inject UserManager<StoreUser> UserManager
+@inject SignInManager<StoreUser> SignInManager
+
 @model ReviewListVM
 
 @{
@@ -11,9 +16,20 @@
 
 <h1>@Model.GameTitle</h1>
 
-<p>
-    <a asp-action="Create" asp-route-gameid=@gameId>Leave a review</a>
-</p>
+@if (SignInManager.IsSignedIn(User)) {
+    @if (Model.CurrentUserReview != null) {
+        <p>
+            You reviewed this game on @Model.CurrentUserReview.TimeCreated.ToString("dd MMMM, yyyy").
+            <a href="#">
+                View your review
+            </a>
+        </p>
+    } else {
+        <p>
+            <a asp-action="Create" asp-route-gameid=@gameId>Leave a review</a>
+        </p>
+    }
+}
 
 <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
     <symbol id="thumbs-up" viewBox="0 0 16 16">
@@ -47,7 +63,7 @@
 @foreach (var item in Model.Reviews!.Items) {
         <tr class="item-dark">
             <td style="width: 20%; border: none; word-break: break-word;">
-                Anonymous User
+                @item.User!.UserName
             </td>
             <td style="border: none; word-break: break-word;">
                 <div style="font-size: 120%;">
