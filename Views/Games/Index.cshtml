@@ -1,3 +1,7 @@
+@using Microsoft.AspNetCore.Identity
+
+@inject SignInManager<StoreUser> SignInManager
+
 @model GameListVM
 
 @{
@@ -6,9 +10,11 @@
 
 <h1>Games</h1>
 
-<p>
-    <a asp-action="Create">Publish a new game</a>
-</p>
+@if (SignInManager.IsSignedIn(User)) {
+    <p>
+        <a asp-action="Create">Publish a new game</a>
+    </p>
+}
 
 <form asp-action="Index" method="get" style="padding-top: 20px;">
     <p>

@@ -9,11 +9,14 @@
 </p>
 
 <span style="font-size: 275%;">@Model.Title</span>
-<span>
-    <a asp-action="Edit" asp-route-id=@Model.Id style="margin-left: 20px;">Edit</a>
-    <span> | </span>
-    <a asp-action="Delete" asp-route-id=@Model.Id>Delete</a>
-</span>
+
+@if (Model.UserIsOwner) {
+    <span>
+        <a asp-action="Edit" asp-route-id=@Model.Id style="margin-left: 20px;">Edit</a>
+        <span> | </span>
+        <a asp-action="Delete" asp-route-id=@Model.Id>Delete</a>
+    </span>
+}
 
 <div class="item-dark" style="display: flex; aspect-ratio: 21/9; width: 750px; margin-top: 0.75em;">
     <div style="display: flex; width: 60%; background-color: #141619;">

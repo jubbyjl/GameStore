@@ -63,6 +63,8 @@ namespace GameStore.Controllers
         {
             var game = await context.Games.FirstOrDefaultAsync(g => g.Id == id);
             if (game == null) return NotFound();
+
+            var userId = userManager.GetUserId(User);
             
             var gameDetailedVM = new GameDetailedVM
             {
@@ -72,8 +74,10 @@ namespace GameStore.Controllers
                 ReleaseDate = game.ReleaseDate,
                 Developer = game.Developer,
                 Publisher = game.Publisher,
-                Description= game.Description
+                Description= game.Description,
+                UserIsOwner = game.UserId == userId,
             };
+
             return View(gameDetailedVM);
         }
 
@@ -109,12 +113,16 @@ namespace GameStore.Controllers
 
         // GET: games/3/edit
         [HttpGet("{id}/edit")]
-        public async Task<IActionResult> Edit(int? id)
+        public async Task<IActionResult> Edit(int id)
         {
-            if (id == null) return NotFound();
-
             var game = await context.Games.FindAsync(id);
             if (game == null) return NotFound();
+
+            var userId = userManager.GetUserId(User);
+            if (game.UserId != userId)
+            {
+                return Forbid();
+            }
 
             return View(game);
         }
@@ -127,6 +135,20 @@ namespace GameStore.Controllers
         public async Task<IActionResult> Edit(int id, [Bind("Id,Title,Price,ReleaseDate,Developer,Publisher,Description")] Game game)
         {
             if (id != game.Id) return NotFound();
+
+            var gameData = await context.Games
+                .AsNoTracking()
+                .FirstOrDefaultAsync(g => g.Id == id);
+
+            if (gameData == null) return NotFound();
+            
+            var userId = userManager.GetUserId(User);
+            if (gameData.UserId != userId)
+            {
+                return Forbid();
+            }
+
+            game.UserId = userId;
 
             if (ModelState.IsValid)
             {
@@ -154,30 +176,36 @@ namespace GameStore.Controllers
 
         // GET: games/3/delete
         [HttpGet("{id}/delete")]
-        public async Task<IActionResult> Delete(int? id)
+        public async Task<IActionResult> Delete(int id)
         {
-            if (id == null) return NotFound();
-
-            var game = await context.Games.FirstOrDefaultAsync(m => m.Id == id);
+            var game = await context.Games.FirstOrDefaultAsync(g => g.Id == id);
             if (game == null) return NotFound();
+
+            var userId = userManager.GetUserId(User);
+            if (game.UserId != userId)
+            {
+                return Forbid();
+            }
 
             return View(game);
         }
 
         // POST: games/3/delete
-        [HttpPost("{id}/delete")]
+        [HttpPost("{id}/delete"), ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Delete(int id)
+        public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var game = await context.Games
-                .Include(g => g.Reviews)
-                .FirstOrDefaultAsync(g => g.Id == id);
+            var game = await context.Games.FirstOrDefaultAsync(g => g.Id == id);
+            if (game == null) return NotFound();
 
-            if (game != null)
+            var userId = userManager.GetUserId(User);
+            if (game.UserId != userId)
             {
-                context.Games.Remove(game);
-                TempData["Success"] = "Successfully deleted.";
+                return Forbid();
             }
+
+            context.Games.Remove(game);
+            TempData["Success"] = "Successfully deleted.";
 
             await context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
