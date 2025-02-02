@@ -149,7 +149,7 @@ namespace GameStore.Controllers
                 UserId = userId
             };
 
-            if (ModelState.IsValid)
+            if (TryValidateModel(review, nameof(review)))
             {
                 context.Add(review);
                 await context.SaveChangesAsync();

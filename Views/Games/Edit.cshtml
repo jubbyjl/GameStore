@@ -1,4 +1,4 @@
-@model GameStore.Models.Game
+@model GameSubmitVM
 
 @{
     ViewData["Title"] = "Edit";
@@ -12,7 +12,6 @@
     <div class="col-md-4">
         <form asp-action="Edit">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="Id" />
             <div class="form-group">
                 <label asp-for="Title" class="control-label"></label>
                 <input asp-for="Title" class="form-control" />
@@ -22,11 +21,6 @@
                 <label asp-for="Price" class="control-label"></label>
                 <input asp-for="Price" class="form-control" />
                 <span asp-validation-for="Price" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="ReleaseDate" class="control-label"></label>
-                <input asp-for="ReleaseDate" class="form-control" />
-                <span asp-validation-for="ReleaseDate" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Developer" class="control-label"></label>
@@ -52,7 +46,7 @@
 </div>
 
 <div>
-    <a asp-action="Details" asp-route-id=@Model.Id>Cancel</a>
+    <a asp-action="Details" asp-route-id=@ViewContext.RouteData.Values["id"]>Cancel</a>
 </div>
 
 @section Scripts {

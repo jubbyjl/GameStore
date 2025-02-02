@@ -44,7 +44,7 @@ namespace GameStore.Controllers
                     Id = g.Id,
                     Title = g.Title,
                     Price = g.Price,
-                    ReleaseDate = g.ReleaseDate
+                    ReleaseDate = g.ReleaseDate.Date
                 }
             );
 
@@ -71,10 +71,10 @@ namespace GameStore.Controllers
                 Id = game.Id,
                 Title = game.Title,
                 Price = game.Price,
-                ReleaseDate = game.ReleaseDate,
+                ReleaseDate = game.ReleaseDate.Date,
                 Developer = game.Developer,
                 Publisher = game.Publisher,
-                Description= game.Description,
+                Description = game.Description,
                 UserIsOwner = game.UserId == userId,
             };
 
@@ -95,20 +95,29 @@ namespace GameStore.Controllers
         [HttpPost("create")]
         [Authorize]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Title,Price,ReleaseDate,Developer,Publisher,Description")] Game game)
+        public async Task<IActionResult> Create(GameSubmitVM gameSubmitVM)
         {
-            game.UserId = userManager.GetUserId(User);
-
-            if (ModelState.IsValid)
+            var newGame = new Game
             {
-                context.Add(game);
+                Title = gameSubmitVM.Title,
+                Price = gameSubmitVM.Price,
+                Developer = gameSubmitVM.Developer,
+                Publisher = gameSubmitVM.Publisher,
+                Description = gameSubmitVM.Description,
+                ReleaseDate = DateTime.UtcNow,
+                UserId = userManager.GetUserId(User),
+            };
+
+            if (TryValidateModel(newGame, nameof(newGame)))
+            {
+                context.Add(newGame);
                 await context.SaveChangesAsync();
 
                 TempData["Success"] = "Successfully published.";
                 return RedirectToAction(nameof(Index));
             }
 
-            return View(game);
+            return View(gameSubmitVM);
         }
 
         // GET: games/3/edit
@@ -124,7 +133,16 @@ namespace GameStore.Controllers
                 return Forbid();
             }
 
-            return View(game);
+            var gameSubmitVM = new GameSubmitVM
+            {
+                Title = game.Title,
+                Price = game.Price,
+                Developer = game.Developer,
+                Publisher = game.Publisher,
+                Description = game.Description,
+            };
+
+            return View(gameSubmitVM);
         }
 
         // POST: games/3/edit
@@ -132,35 +150,33 @@ namespace GameStore.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost("{id}/edit")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Title,Price,ReleaseDate,Developer,Publisher,Description")] Game game)
+        public async Task<IActionResult> Edit(int id, GameSubmitVM gameSubmitVM)
         {
-            if (id != game.Id) return NotFound();
-
-            var gameData = await context.Games
-                .AsNoTracking()
-                .FirstOrDefaultAsync(g => g.Id == id);
-
-            if (gameData == null) return NotFound();
+            var game = await context.Games.FirstOrDefaultAsync(g => g.Id == id);
+            if (game == null) return NotFound();
             
             var userId = userManager.GetUserId(User);
-            if (gameData.UserId != userId)
+            if (game.UserId != userId)
             {
                 return Forbid();
             }
 
-            game.UserId = userId;
+            game.Title = gameSubmitVM.Title;
+            game.Price = gameSubmitVM.Price;
+            game.Developer = gameSubmitVM.Developer;
+            game.Publisher = gameSubmitVM.Publisher;
+            game.Description = gameSubmitVM.Description;
 
-            if (ModelState.IsValid)
+            if (TryValidateModel(game, nameof(game)))
             {
                 try
                 {
-                    context.Update(game);
                     await context.SaveChangesAsync();
                     TempData["Success"] = "Successfully edited.";
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!GameExists(game.Id))
+                    if (!await context.Games.AnyAsync(g => g.Id == game.Id))
                     {
                         return NotFound();
                     }
@@ -171,7 +187,7 @@ namespace GameStore.Controllers
                 }
                 return RedirectToAction(nameof(Details), new { id });
             }
-            return View(game);
+            return View(gameSubmitVM);
         }
 
         // GET: games/3/delete
@@ -209,11 +225,6 @@ namespace GameStore.Controllers
 
             await context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
-        }
-
-        private bool GameExists(int id)
-        {
-            return context.Games.Any(e => e.Id == id);
         }
     }
 }
