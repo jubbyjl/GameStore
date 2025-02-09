@@ -30,7 +30,7 @@ a:hover {
   color: #4a98ff;
 }
 
-input, textarea, select, .form-control, .form-control:focus {
+input, textarea, select, .form-control, .form-control:focus, button {
   background-color: #33363b;
   border: 1px solid #5c5c5c;
   color: inherit;
@@ -53,4 +53,84 @@ dt {
 .item-dark {
   background-color: #1a1d21;
   color: #eee;
+}
+
+/* General */
+
+.img-ctr {
+  margin: auto;
+  max-width: 100%;
+  max-height: 100%;
+}
+
+.icon {
+  vertical-align: -0.1em;
+}
+
+.container .page-content {
+  width: 100%;
+  max-width: 950px;
+  margin: 0 auto;
+}
+
+/* Search */
+
+.searchbar {
+  background-color: #14171c;
+  padding: 8px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 16px;
+}
+
+.searchbar .searchbox {
+  flex: 2;
+  display: flex;
+}
+
+.searchbox input[type="text"] {
+  background-color: #2c3546;
+  border-radius: 3px;
+  flex: 0 1 22em;
+}
+
+.searchbox button {
+  background-color: #2c3546;
+  border-radius: 3px;
+  margin-left: 6px;
+}
+
+.searchbar button:hover {
+  background-color: #485772;
+}
+
+.searchbar .sortbox {
+  flex: 1;
+  min-width: 11em; /* prevent large option elements from forcing width */
+  display: flex;
+  justify-content: flex-end;
+}
+
+.sortbox .sort-label {
+  margin-right: 6px;
+  font-weight: 300;
+  text-wrap: nowrap;
+}
+
+.sortbox select {
+  background-color: #2c3546;
+  border-radius: 3px;
+  padding-bottom: 1px;
+  text-overflow: ellipsis;
+  flex: 0 1 10em;
+  min-width: 0; /* prevent large option elements from forcing width */
+}
+
+.sortbox select:hover, .sortbox select:focus {
+  background-color: #485772;
+}
+
+.search-results-info {
+  font-weight: 300;
+  padding: 8px;
 }

@@ -8,79 +8,95 @@
     ViewData["Title"] = "Games";
 }
 
-<h1>Games</h1>
+<div class="page-content">
+    <h1>Games</h1>
 
-@if (SignInManager.IsSignedIn(User)) {
-    <p>
-        <a asp-action="Create">Publish a new game</a>
-    </p>
-}
+    @if (SignInManager.IsSignedIn(User)) {
+        <p>
+            <a asp-action="Create">Publish a new game</a>
+        </p>
+    }
+    <hr />
+</div>
 
-<form asp-action="Index" method="get" style="padding-top: 20px;">
-    <p>
-        <input asp-for="Search" name="search" />
-        <input type="submit" value="Search" />
-    </p>
-    <p>
-        Sort by:
-        <select>
-            
-        </select>
-    </p>
-</form>
+<div class="page-content">
+    <form asp-action="Index" method="get">
+        <div class="searchbar">
+            <div class="searchbox">
+                <input asp-for="Search" name="search" />
+                <button type="submit">Search</button>
+            </div>
+            <div class="sortbox">
+                <div class="sort-label">
+                    Sort by:
+                </div>
+                <select onchange="this.form.submit()">
+                    <option selected>Release Date</option>
+                    <option>Name</option>
+                </select>
+            </div>
+        </div>
+    </form>
 
-<table>
-    <tbody>
-@foreach (var item in Model.Games!.Items) {
-        <tr class="item-dark">
-            <td>
-                <a asp-action="Details" asp-route-id=@item.Id class="game-btn">
-                    <img src="test">
-                </a>
-            </td>
-            <td>
-                <a asp-action="Details" asp-route-id=@item.Id class="game-btn">
-                    @Html.DisplayFor(m => item.Title)
-                </a>
-            </td>
-            <td>
-                <a asp-action="Details" asp-route-id=@item.Id class="game-btn">
-                    @Html.DisplayFor(m => item.ReleaseDate)
-                </a>
-            </td>
-            <td>
-                <a asp-action="Details" asp-route-id=@item.Id class="game-btn">
-                    @if (item.Price > 0) {
-                        <span>$@Html.DisplayFor(m => item.Price)</span>
-                    } else {
-                        <span>Free</span>
-                    }
-                </a>
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+    <div class="search-results-info">
+        @Model.Games!.TotalItems results match your search.
+    </div>
 
-@{
-    var prev = Model.Games.CanPrev ? "" : "disabled";
-    var next = Model.Games.CanNext ? "" : "disabled";
-}
-@if (Model.Games.TotalPages > 0) {
-    <p>
-        <form asp-action="Index" method="get">
-            <a asp-action="Index" asp-route-search=@Model.Search asp-route-page=@(Model.Games.PageNum - 1) class="btn btn-primary @prev">&lt;</a>
+    <table>
+        <tbody>
+    @foreach (var item in Model.Games!.Items) {
+            <tr class="item-dark">
+                <td>
+                    <a asp-action="Details" asp-route-id=@item.Id class="game-btn">
+                        
+                    </a>
+                </td>
+                <td>
+                    <a asp-action="Details" asp-route-id=@item.Id class="game-btn">
+                        @Html.DisplayFor(m => item.Title)
+                    </a>
+                </td>
+                <td>
+                    <a asp-action="Details" asp-route-id=@item.Id class="game-btn">
+                        @Html.DisplayFor(m => item.ReleaseDate)
+                    </a>
+                </td>
+                <td>
+                    <a asp-action="Details" asp-route-id=@item.Id class="game-btn">
+                        @if (item.Price > 0) {
+                            <span>$@Html.DisplayFor(m => item.Price)</span>
+                        } else {
+                            <span>Free</span>
+                        }
+                    </a>
+                </td>
+            </tr>
+    }
+        </tbody>
+    </table>
 
-            <input name="search" value=@Model.Search type="hidden"></input>
-            <input asp-for="Page" name="page" type="text" style="width: 35px;"></input>
-            of @Model.Games.TotalPages
-            
-            <a asp-action="Index" asp-route-search=@Model.Search asp-route-page=@(Model.Games.PageNum + 1) class="btn btn-primary @next">></a>
-        </form>
-    </p>
-} else {
-    <p>0 Results</p>
-}
+    <div>
+        @{
+            var prev = Model.Games.CanPrev ? "" : "disabled";
+            var next = Model.Games.CanNext ? "" : "disabled";
+        }
+        @if (Model.Games.TotalPages > 0) {
+            <p>
+                <form asp-action="Index" method="get">
+                    <a asp-action="Index" asp-route-search=@Model.Search asp-route-page=@(Model.Games.PageNum - 1) class="btn btn-primary @prev">&lt;</a>
+
+                    <input name="search" value=@Model.Search type="hidden"></input>
+                    <input asp-for="Page" name="page" type="text" style="width: 35px;"></input>
+                    of @Model.Games.TotalPages
+                    
+                    <a asp-action="Index" asp-route-search=@Model.Search asp-route-page=@(Model.Games.PageNum + 1) class="btn btn-primary @next">></a>
+                </form>
+            </p>
+        } else {
+            <p>0 Results</p>
+        }
+    </div>
+</div>
 
 <style>
     table {
