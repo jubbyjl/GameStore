@@ -44,7 +44,9 @@ namespace GameStore.Controllers
                     Id = g.Id,
                     Title = g.Title,
                     Price = g.Price,
-                    ReleaseDate = g.ReleaseDate.Date
+                    ReleaseDate = g.ReleaseDate.Date,
+                    TotalReviews = g.Reviews.Count(),
+                    PositiveReviews = g.Reviews.Count(x => x.IsPositive),
                 }
             );
 

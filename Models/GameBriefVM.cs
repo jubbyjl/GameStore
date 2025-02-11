@@ -11,4 +11,6 @@ public class GameBriefVM
     [Display(Name = "Release Date")]
     [DataType(DataType.Date)]
     public DateTime ReleaseDate { get; set; }
+    public int TotalReviews { get; set; }
+    public int PositiveReviews { get; set; }
 }

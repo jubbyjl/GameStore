@@ -134,3 +134,54 @@ dt {
   font-weight: 300;
   padding: 8px;
 }
+
+.search-results-row {
+  text-decoration: none;
+  color: #ccc;
+  background-color: #1a1d21;
+  min-height: 55px;
+  text-wrap: nowrap;
+  margin-bottom: 6px;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.search-results-row:hover {
+  background-color: #151921;
+  color: #ccc;
+}
+
+.search-results-row .front-image {
+  height: 55px;
+  aspect-ratio: 16/9;
+}
+
+.search-results-row .title {
+  flex: 5;
+  padding: 0 6px 0 20px;
+  min-width: 16em;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.search-results-row .release {
+  flex: 2;
+  padding: 0 6px;
+  font-size: 0.95em;
+  min-width: 7em;
+}
+
+.search-results-row .review-summary {
+  flex: 1;
+  padding: 0 6px;
+  font-size: 0.95em;
+  min-width: 5em;
+}
+
+.search-results-row .price {
+  flex: 2;
+  padding: 0 12px 0 6px;
+  text-align: right;
+  min-width: 5em;
+}
