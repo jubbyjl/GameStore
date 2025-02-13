@@ -6,7 +6,10 @@ using GameStore.Models;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddDbContext<GameStoreContext>(options =>
-    options.UseSqlite(builder.Configuration.GetConnectionString("GameStoreContext") ?? throw new InvalidOperationException("Connection string 'GameStoreContext' not found.")));
+    options
+        .UseSqlite(builder.Configuration.GetConnectionString("GameStoreContext") ?? throw new InvalidOperationException("Connection string 'GameStoreContext' not found."))
+        .UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking)
+);
 
 builder.Services
     .AddIdentity<StoreUser,IdentityRole>(options => options.SignIn.RequireConfirmedAccount = true)

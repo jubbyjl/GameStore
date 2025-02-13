@@ -102,7 +102,7 @@ namespace GameStore.Controllers
             var newGame = new Game
             {
                 Title = gameSubmitVM.Title,
-                Price = gameSubmitVM.Price,
+                Price = Math.Round(gameSubmitVM.Price, 2),
                 Developer = gameSubmitVM.Developer,
                 Publisher = gameSubmitVM.Publisher,
                 Description = gameSubmitVM.Description,
@@ -164,7 +164,7 @@ namespace GameStore.Controllers
             }
 
             game.Title = gameSubmitVM.Title;
-            game.Price = gameSubmitVM.Price;
+            game.Price = Math.Round(gameSubmitVM.Price, 2);
             game.Developer = gameSubmitVM.Developer;
             game.Publisher = gameSubmitVM.Publisher;
             game.Description = gameSubmitVM.Description;
@@ -173,6 +173,7 @@ namespace GameStore.Controllers
             {
                 try
                 {
+                    context.Update(game);
                     await context.SaveChangesAsync();
                     TempData["Success"] = "Successfully edited.";
                 }
