@@ -34,6 +34,10 @@ namespace GameStore.Data
                     .WithOne(e => e.User)
                     .HasForeignKey(x => x.UserId)
                     .IsRequired();
+
+                b.HasMany(e => e.Library)
+                    .WithMany(e => e.Players)
+                    .UsingEntity<StoreUserGamePurchase>();
             });
         }
     }

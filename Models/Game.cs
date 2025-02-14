@@ -28,4 +28,7 @@ public class Game
     public List<Review> Reviews { get; } = new List<Review>();
 
     public string? UserId { get; set; }
+
+    public List<StoreUserGamePurchase> Purchases { get; } = [];
+    public List<StoreUser> Players { get; } = [];
 }

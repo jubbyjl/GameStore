@@ -3,6 +3,7 @@ using System;
 using GameStore.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace GameStore.Migrations
 {
     [DbContext(typeof(GameStoreContext))]
-    partial class GameStoreContextModelSnapshot : ModelSnapshot
+    [Migration("20250214145111_CreateTableForUserPurchaseOfGames")]
+    partial class CreateTableForUserPurchaseOfGames
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "8.0.8");
