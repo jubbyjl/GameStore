@@ -1,0 +1,14 @@
+@model IEnumerable<Game>
+
+<div class="page-content">
+    Your games
+    <hr>
+    @foreach (var game in Model) {
+        <div>
+            @game.Title
+            <a asp-controller="Games" asp-action="Details" asp-route-id=@game.Id>
+                View store page
+            </a>
+        </div>
+    }
+</div>
