@@ -1,0 +1,11 @@
+@model decimal
+
+<div class="page-content">
+    Your balance is $@Model.ToString("0.00").
+    
+    @if (Model < 100) {
+        <form asp-action="AddFunds">
+            <button type="submit">Top up</button>
+        </form>
+    }
+</div>
