@@ -10,7 +10,7 @@
 
 <span style="font-size: 275%;">@Model.Title</span>
 
-@if (Model.UserIsOwner) {
+@if (Model.UserIsPublisher) {
     <span>
         <a asp-action="Edit" asp-route-id=@Model.Id style="margin-left: 20px;">Edit</a>
         <span> | </span>
@@ -20,25 +20,45 @@
 
 <div class="item-dark" style="display: flex; aspect-ratio: 21/9; width: 750px; margin-top: 0.75em;">
     <div style="display: flex; width: 60%; background-color: #141619;">
-        <img src="test">
+
     </div>
     <div style="padding: 30px; overflow-y: auto; width: 40%;">
         <p style="word-break: break-word; white-space: pre-wrap;">@Html.DisplayFor(m => m.Description)</p>
     </div>
 </div>
 
+<br>
+@{
+    string price, buyBtn;
+    if (Model.Price > 0) {
+        price = Model.Price.ToString("$0.00");
+        buyBtn = "Buy Now";
+    } else {
+        price = "Free to Play";
+        buyBtn = "Add to Library";
+    }
+
+    string inLibrary = "";
+    if (Model.InUserLibrary) {
+        inLibrary = "disabled";
+        buyBtn = "In Library";
+    }
+}
+<div style="display: flex; align-items: center; width: fit-content; padding: 6px 6px 6px 0; background-color: #181f2b;">
+    <div style="padding: 0 20px">
+        @price
+    </div>
+    @if (Model.Price > 0) {
+        <a class="buy-btn @inLibrary" asp-controller="Purchase" asp-action="Checkout" asp-route-gameid=@Model.Id>@buyBtn</a>
+    } else {
+        <form asp-controller="Purchase" asp-action="AddFree" asp-route-gameid=@Model.Id>
+            <button class="buy-btn" @inLibrary type="submit">@buyBtn</button>
+        </form>  
+    }
+</div>
+
 <div style="padding-top: 1.5em;">
     <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(m => m.Price)
-        </dt>
-        <dd class = "col-sm-10">
-            @if (Model.Price > 0) {
-                <span>$@Html.DisplayFor(m => m.Price)</span>
-            } else {
-                <span>Free</span>
-            }
-        </dd>
         <dt class = "col-sm-2">
             @Html.DisplayNameFor(m => m.ReleaseDate)
         </dt>
@@ -69,5 +89,23 @@
         margin: auto;
         max-width: 100%;
         max-height: 100%;
+    }
+
+    .buy-btn {
+        margin-left: 2px;
+        padding: 4px 12px;
+        border-radius: 2px;
+        background-color: #2b6a00;
+        border: 1px solid #5c5c5c;
+        color: white;
+        text-decoration: none;
+    }
+    .buy-btn:not([disabled]):hover {
+        background-color: #418f0b;
+        color: white;
+    }
+    .buy-btn:disabled, .buy-btn.disabled {
+        background-color: #203e00;
+        pointer-events: none;
     }
 </style>

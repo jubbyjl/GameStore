@@ -1,0 +1,12 @@
+@model PurchaseCheckoutVM
+
+<div class="page-content">
+    <h5>Checkout</h5>
+    <hr>
+    <div style="margin-bottom: 15px;">
+        @Model.Title
+    </div>
+    <form asp-action="Checkout" asp-route-gameid=@Model.Id>
+        <button type="submit">Pay $@Model.Price.ToString("0.00")</button>
+    </form>
+</div>

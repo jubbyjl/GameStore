@@ -63,11 +63,18 @@ namespace GameStore.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> Details(int id)
         {
-            var game = await context.Games.FirstOrDefaultAsync(g => g.Id == id);
-            if (game == null) return NotFound();
+            var games = from g in context.Games
+                        select g;
 
             var userId = userManager.GetUserId(User);
-            
+            if (userId != null)
+            {
+                games = games.Include(x => x.Purchases.Where(p => p.UserId == userId));
+            }
+
+            var game = await games.SingleOrDefaultAsync(g => g.Id == id);
+            if (game == null) return NotFound();
+
             var gameDetailedVM = new GameDetailedVM
             {
                 Id = game.Id,
@@ -77,7 +84,8 @@ namespace GameStore.Controllers
                 Developer = game.Developer,
                 Publisher = game.Publisher,
                 Description = game.Description,
-                UserIsOwner = game.UserId == userId,
+                UserIsPublisher = game.UserId == userId,
+                InUserLibrary = game.Purchases.Count != 0,
             };
 
             return View(gameDetailedVM);
