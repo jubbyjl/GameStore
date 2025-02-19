@@ -38,4 +38,12 @@ public class AccountController: Controller
         }
         return RedirectToAction(nameof(Balance));
     }
+
+    [HttpGet("userbalance")]
+    [AllowAnonymous]
+    public async Task<JsonResult> UserBalance()
+    {
+        var user = await userManager.GetUserAsync(User);
+        return Json(user?.Balance);
+    }
 }

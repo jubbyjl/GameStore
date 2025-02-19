@@ -6,7 +6,7 @@
 @if (SignInManager.IsSignedIn(User))
 {
     <li class="nav-item">
-        <a class="nav-link" asp-controller="Account" asp-action="Balance">Balance</a>
+        <a class="nav-link" asp-controller="Account" asp-action="Balance" id="userbalance"></a>
     </li>
     <li class="nav-item">
         <a id="manage" class="nav-link" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">Account</a>
