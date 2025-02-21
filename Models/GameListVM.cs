@@ -8,4 +8,6 @@ public class GameListVM
     public ItemsPage<GameBriefVM>? Games { get; set; }
     public int Page { get; set; }
     public string? Search { get; set; }
+    public SelectList? Sorts { get; set; }
+    public string? Sort { get; set; }
 }

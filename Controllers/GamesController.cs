@@ -26,7 +26,7 @@ namespace GameStore.Controllers
 
         // GET: games
         [HttpGet]
-        public async Task<IActionResult> Index(string? search, int page = 1, int pageSize = 10)
+        public async Task<IActionResult> Index(string? search, string? sort, int page = 1, int pageSize = 10)
         {
             var games = from g in context.Games
                         select g;
@@ -36,7 +36,36 @@ namespace GameStore.Controllers
                 games = games.Where(g => g.Title!.ToUpper().Contains(search.ToUpper()));
             }
             
-            games = games.OrderByDescending(g => g.ReleaseDate);
+            var sortReleaseDesc = new SelectListItem { Value = "", Text = "Release Date" };
+            var sortNameAsc = new SelectListItem { Value = "nameAsc", Text = "Name" };
+            var sortPriceAsc = new SelectListItem { Value = "priceAsc", Text = "Lowest Price" };
+            var sortPriceDesc = new SelectListItem { Value = "priceDesc", Text = "Highest Price" };
+            var sortReviewsDesc = new SelectListItem { Value = "reviewsDesc", Text = "User Reviews" };
+
+            if (string.IsNullOrEmpty(sort))
+            {
+                games = games.OrderByDescending(g => g.ReleaseDate);
+            }
+            else if (sort == sortNameAsc.Value)
+            {
+                games = games.OrderBy(g => g.Title)
+                             .ThenByDescending(g => g.ReleaseDate);
+            }
+            else if (sort == sortPriceAsc.Value)
+            {
+                games = games.OrderBy(g => (double)g.Price) // sqlite doesnt support decimal
+                             .ThenByDescending(g => g.ReleaseDate);
+            }
+            else if (sort == sortPriceDesc.Value)
+            {
+                games = games.OrderByDescending(g => (double)g.Price)
+                             .ThenByDescending(g => g.ReleaseDate);
+            }
+            else if (sort == sortReviewsDesc.Value)
+            {
+                games = games.OrderByDescending(g => g.Reviews.Any() ? (double)g.Reviews.Count(x => x.IsPositive) / g.Reviews.Count() : 0)
+                             .ThenByDescending(g => g.ReleaseDate);
+            }
 
             var gamesBrief = games.Select(g =>
                 new GameBriefVM
@@ -53,7 +82,12 @@ namespace GameStore.Controllers
             var gamesListVM = new GameListVM
             {
                 Games = await ItemsPage<GameBriefVM>.NewAsync(gamesBrief, page, pageSize),
-                Page = page
+                Page = page,
+                Sorts = new SelectList(
+                    new[] { sortReleaseDesc, sortNameAsc, sortPriceAsc, sortPriceDesc, sortReviewsDesc },
+                    "Value",
+                    "Text"
+                ),
             };
 
             return View(gamesListVM);

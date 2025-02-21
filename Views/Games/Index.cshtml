@@ -30,10 +30,7 @@
                 <div class="sort-label">
                     Sort by:
                 </div>
-                <select onchange="this.form.submit()">
-                    <option selected>Release Date</option>
-                    <option>Name</option>
-                </select>
+                <select asp-for="Sort" asp-items="Model.Sorts" name="sort" onchange="this.form.submit()"></select>
             </div>
         </div>
     </form>
