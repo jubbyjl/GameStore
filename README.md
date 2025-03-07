@@ -6,15 +6,13 @@ This project was purely a learning experience and served as an introduction to w
 #### Limitations
 - Games do not have display images yet
 
-#### Screenshots
+#### Screenshot
 ![ss](https://github.com/user-attachments/assets/6ff61b7d-144d-4934-8831-62e42bfc2cdc)
 
 ## Built With
-- C#
 - ASP.NET Core
 - EF Core
-- HTML, CSS, JavaScript
-- Bootstrap, jQuery
+- Bootstrap
 
 ## Setup
 ### Prerequisites
@@ -24,6 +22,10 @@ This project was purely a learning experience and served as an introduction to w
 git clone https://github.com/jubbyjl/GameStore.git
 ```
 ### Run locally
+- Trust the HTTPS development certificate
+```
+dotnet dev-certs https --trust
+```
 - Build and run the app locally
 ```
 dotnet run --launch-profile https
